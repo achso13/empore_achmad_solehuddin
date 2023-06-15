@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,16 +49,18 @@ class LoginController extends Controller
      */
     protected function attemptLogin(Request $request)
     {
-
-        // dd(Auth::guard('user')->attempt(
-        //             $this->credentials($request), $request->boolean('remember')
-        //         ) || Auth::guard('admin')->attempt(
-        //             $this->credentials($request), $request->boolean('remember')
-        //         ));
-    return Auth::guard('user')->attempt(
-            $this->credentials($request), $request->boolean('remember')
-        ) || Auth::guard('admin')->attempt(
-            $this->credentials($request), $request->boolean('remember')
+        $userAttempt = Auth::guard('user')->attempt(
+            $this->credentials($request),
+            $request->boolean('remember')
         );
+
+        if (!$userAttempt) {
+            return Auth::guard('admin')->attempt(
+                $this->credentials($request),
+                $request->boolean('remember')
+            );
+        }
+
+        return $userAttempt;
     }
 }
