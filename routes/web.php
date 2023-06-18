@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::resource("anggota", App\http\Controllers\UserController::class)->except(['show']);
+Route::resource("buku", App\http\Controllers\BukuController::class)->except(['show', 'store', 'update', 'destroy']);

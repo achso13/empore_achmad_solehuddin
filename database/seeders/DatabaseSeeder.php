@@ -14,19 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-        
-        DB::table('admins')->insert([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('password'),
-            'created_at' => now(),
-            'updated_at' => now()
+        $this->call([
+            UserSeeder::class,
+            BukuSeeder::class,
+            AdminSeeder::class,
         ]);
     }
 }
