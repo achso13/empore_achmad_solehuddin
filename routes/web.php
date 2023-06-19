@@ -22,5 +22,7 @@ Route::get("pengajuan/{bukuId}/create", [App\http\Controllers\PengajuanControlle
 Route::post("pengajuan/{bukuId}/store", [App\http\Controllers\PengajuanController::class, 'store'])->name('pengajuan.store');
 Route::put("pengajuan/{id}/status/{status}", [App\http\Controllers\PengajuanController::class, 'status'])->name('pengajuan.status');
 
+Route::get("peminjaman", [App\http\Controllers\PeminjamanController::class, 'index'])->name('peminjaman.index');
+
 Route::resource("anggota", App\http\Controllers\UserController::class)->except(['show']);
 Route::resource("buku", App\http\Controllers\BukuController::class)->except(['show', 'store', 'update', 'destroy']);

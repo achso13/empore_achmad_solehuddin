@@ -13,7 +13,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class PengajuanDataTable extends DataTable
+class PeminjamanDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -26,35 +26,23 @@ class PengajuanDataTable extends DataTable
             return (new EloquentDataTable($query))
                 ->setRowId('id');
         }
-
         return (new EloquentDataTable($query))
             ->setRowId('id')
             ->addColumn('action', function ($pengajuan) {
-                if ($pengajuan['status'] === 'pending') {
+                if ($pengajuan['status'] === 'approved') {
                     return '
-                    <form action="' . route("pengajuan.status", ['id' => $pengajuan['id'], 'status' => 'approved']) . '" method="POST" onsubmit="return confirm(`Approve pengajuan?`);" >
+                    <form action="' . route("pengajuan.status", ['id' => $pengajuan['id'], 'status' => 'returned']) . '" method="POST" onsubmit="return confirm(`Ubah status?`);">
                         ' . csrf_field() . '
                         ' . method_field('PUT') . '
-                        <button type="submit" class="btn btn-xs btn-success">
-                            Approve
+                        <button class="btn btn-xs btn-primary">
+                            Return
                         </button>
-                    </form>
-                    <form action="' . route("pengajuan.status", ['id' => $pengajuan['id'], 'status' => 'rejected']) . '" method="POST" onsubmit="return confirm(`Reject pengajuan?`);">
-                        ' . csrf_field() . '
-                        ' . method_field('PUT') . '
-                        <button type="submit" class="btn btn-xs btn-danger">
-                            Reject
-                        </button>
-                    </form>
-                    ';
+                    </form>';
                 }
                 return '    
-                    <button class="btn btn-xs btn-success" disabled>
-                       Approve
-                    </button>   
-                    <button class="btn btn-xs btn-danger" disabled>
-                        Reject
-                    </button>';
+                <button class="btn btn-xs btn-primary" disabled>
+                   Return
+                </button>';
             })
             ->rawColumns(['action']);
     }
@@ -65,6 +53,8 @@ class PengajuanDataTable extends DataTable
     public function query(Pengajuan $model): QueryBuilder
     {
         return $model->newQuery()
+            ->where('status', '=', 'approved')
+            ->orWhere('status', '=', 'returned')
             ->join('users', 'users.id', '=', 'pengajuan.id_user')
             ->join('buku', 'buku.id', '=', 'pengajuan.id_buku')
             ->select(
@@ -80,7 +70,7 @@ class PengajuanDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('pengajuan-table')
+            ->setTableId('peminjaman-table')
             ->columns($this->getColumns())
             ->minifiedAjax();
     }
@@ -105,7 +95,6 @@ class PengajuanDataTable extends DataTable
                 ->printable(false)
                 ->orderable(false)
                 ->searchable(false),
-
         ];
 
         if (Auth::guard('user')->check()) {
@@ -120,6 +109,6 @@ class PengajuanDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Pengajuan_' . date('YmdHis');
+        return 'Peminjaman_' . date('YmdHis');
     }
 }

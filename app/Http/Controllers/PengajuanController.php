@@ -96,6 +96,7 @@ class PengajuanController extends Controller
             Buku::where("id", $buku['id'])->update(['stok' => $buku['stok'] - 1]);
         } else if ($status === "returned") {
             Buku::where("id", $buku['id'])->update(['stok' => $buku['stok'] + 1]);
+            return redirect()->route('peminjaman.index')->with('success', "Peminjaman berhasil diubah [$status]");
         }
 
         return redirect()->route('pengajuan.index')->with('success', "Pengajuan berhasil diubah [$status]");
