@@ -68,8 +68,6 @@ class UsersDataTable extends DataTable
             Column::make('id'),
             Column::make('name'),
             Column::make('email'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
             Column::computed('action')
                 ->title('Action')
                 ->exportable(false)

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             BukuSeeder::class,
             AdminSeeder::class,
+            PengajuanSeeder::class,
         ]);
     }
 }

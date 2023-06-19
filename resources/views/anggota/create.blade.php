@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container pt-5">
+    <div class="container pt-3">
         <div class="card">
             <div class="card-header">
                 Tambah Anggota
@@ -23,8 +23,6 @@
                         <x-adminlte-input name="password" type="password" label="Password" placeholder="password"
                             error-key="password" enable-old-support fgroup-class="col-md-6" />
                     </div>
-
-
 
                     <x-adminlte-button label="Submit" type="submit" theme="primary" />
                 </form>

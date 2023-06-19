@@ -17,8 +17,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="align-middle m-0">Kelola Anggota</h5>
-                    <a class="btn btn-primary" href={{ route('anggota.create') }}>Tambah</a>
+                    <h5 class="align-middle m-0">Data Pengajuan</h5>
                 </div>
             </div>
 

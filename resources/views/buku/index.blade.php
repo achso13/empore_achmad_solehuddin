@@ -8,6 +8,12 @@
             </x-adminlte-alert>
         @endif
 
+        @if (session('failed'))
+            <x-adminlte-alert theme="danger" title="Failed">
+                {{ session('failed') }}
+            </x-adminlte-alert>
+        @endif
+
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">

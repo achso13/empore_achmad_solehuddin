@@ -20,7 +20,7 @@ class BukuFactory extends Factory
             'judul_buku' => fake()->lastName(),
             'tahun_terbit' => fake()->year(),
             'penulis' => fake()->name(),
-            'stok' => fake()->randomNumber(3)
+            'stok' => fake()->randomNumber(2)
         ];
     }
 }

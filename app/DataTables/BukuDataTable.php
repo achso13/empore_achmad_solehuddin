@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\Buku;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -24,6 +25,11 @@ class BukuDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->setRowId('id')
             ->addColumn('action', function ($buku) {
+                if (Auth::guard('user')->check()) {
+                    return '<a href="' . route("pengajuan.create", $buku['id']) . '" class="btn btn-xs btn-primary">
+                    <i class="fa fa-edit"> Pinjam</i>
+                </a>';
+                }
                 return '
                     <a href="' . route("buku.edit", $buku['id']) . '" class="btn btn-xs btn-warning">
                         <i class="fa fa-edit"></i>

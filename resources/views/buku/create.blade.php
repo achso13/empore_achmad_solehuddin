@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container pt-5">
+    <div class="container pt-3">
         <div class="card">
             <div class="card-header">
                 Tambah Buku

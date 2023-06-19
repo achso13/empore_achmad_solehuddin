@@ -124,7 +124,7 @@ class BookApiController extends Controller
         try {
             Buku::findOrFail($id);
             Buku::destroy($id);
-            
+
             session()->flash('success', 'Buku berhasil dihapus');
             session()->reflash();
 
