@@ -42,8 +42,8 @@
                 <div class="card-footer">
                     <x-adminlte-button label="Submit" type="submit" class="float-right" theme="primary" />
                 </div>
+            </div>
         </form>
-    </div>
     </div>
 @endsection
 

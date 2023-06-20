@@ -87,7 +87,7 @@ class UserController extends Controller
             'password' => Hash::make($request['password']),
         ];
 
-        if (empty($data['password'])) {
+        if (empty($request['password'])) {
             unset($data['password']);
         }
 
