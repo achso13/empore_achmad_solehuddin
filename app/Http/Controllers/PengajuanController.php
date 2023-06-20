@@ -20,7 +20,9 @@ class PengajuanController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:admin,user');
+        $this->middleware('auth:admin,user')->only('index');
+        $this->middleware('auth:admin')->only('status');
+        $this->middleware('auth:user')->only(['create', 'store']);
     }
 
     /**

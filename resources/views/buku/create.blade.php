@@ -39,11 +39,11 @@
                         fgroup-class="col-md-6" />
                 </div>
 
-                <div class="card-footer">
-                    <x-adminlte-button label="Submit" type="submit" class="float-right" theme="primary" />
-                </div>
+            </div>
+            <div class="card-footer">
+                <x-adminlte-button label="Submit" type="submit" class="float-right" theme="primary" />
+            </div>
         </form>
-    </div>
     </div>
 @endsection
 

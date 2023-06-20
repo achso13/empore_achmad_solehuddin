@@ -310,11 +310,7 @@ return [
             'url'  => '/peminjaman',
             'icon' => 'fas fa-fw fa-clipboard-check',
         ],
-        [
-            'text' => 'Anggota',
-            'url'  => '/anggota',
-            'icon' => 'fas fa-fw fa-user',
-        ],
+
     ],
 
     /*

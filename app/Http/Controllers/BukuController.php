@@ -15,7 +15,8 @@ class BukuController extends Controller
      */
     public function __construct()
     {
-        $this->middleware("auth:admin,user");
+        $this->middleware("auth:admin,user")->only(['index']);
+        $this->middleware("auth:admin")->only(['create', 'edit']);
     }
 
     /**

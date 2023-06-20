@@ -22,7 +22,9 @@
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="align-middle m-0">Data Buku</h5>
-                <a class="btn btn-primary" href={{ route('buku.create') }}>Tambah</a>
+                @auth('admin')
+                    <a class="btn btn-primary" href={{ route('buku.create') }}>Tambah</a>
+                @endauth
             </div>
         </div>
 
