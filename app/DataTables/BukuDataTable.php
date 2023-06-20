@@ -27,16 +27,18 @@ class BukuDataTable extends DataTable
             ->addColumn('action', function ($buku) {
                 if (Auth::guard('user')->check()) {
                     return '<a href="' . route("pengajuan.create", $buku['id']) . '" class="btn btn-xs btn-primary">
-                    <i class="fa fa-edit"> Pinjam</i>
+                    Pinjam
                 </a>';
                 }
                 return '
-                    <a href="' . route("buku.edit", $buku['id']) . '" class="btn btn-xs btn-warning">
+                <div class="d-flex">
+                    <a href="' . route("buku.edit", $buku['id']) . '" class="btn btn-xs btn-warning mr-2">
                         <i class="fa fa-edit"></i>
                     </a>
                     <button class="btn btn-xs btn-danger btn-delete" data-id="' . $buku['id'] . '">
                         <i class="fa fa-trash"></i>
                     </button>
+                </div>
                 ';
             })
             ->rawColumns(['action']);
@@ -58,7 +60,11 @@ class BukuDataTable extends DataTable
         return $this->builder()
             ->setTableId('buku-table')
             ->columns($this->getColumns())
-            ->minifiedAjax();
+            ->minifiedAjax()
+            ->parameters([
+                'responsive' => true,
+                'autoWidth' => false
+            ]);
     }
 
     /**

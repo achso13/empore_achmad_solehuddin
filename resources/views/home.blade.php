@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Home</h1>
 @stop
 
 @section('content')
-    <p>Welcome to this beautiful admin panel.</p>
+    <p>Selamat datang di Sistem Peminjaman Buku, <b>{{ Auth::guard()->user()->name }}</b></p>
 @stop

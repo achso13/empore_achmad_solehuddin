@@ -25,7 +25,8 @@ class UsersDataTable extends DataTable
             ->setRowId('id')
             ->addColumn('action', function ($user) {
                 return '
-                <a href="' . route("anggota.edit", $user['id']) . '" class="btn btn-xs btn-warning">
+                <div class="d-flex"> 
+                <a href="' . route("anggota.edit", $user['id']) . '" class="btn btn-xs btn-warning mr-2">
                     <i class="fa fa-edit"></i>
                 </a>
                 <form action="' . route("anggota.destroy", $user['id']) . '" method="POST" style="display: inline" onsubmit="return confirm(`Hapus Data?`);">
@@ -35,6 +36,7 @@ class UsersDataTable extends DataTable
                         <i class="fa fa-trash"></i>
                     </button>
                 </form>
+                </div>
                 ';
             })
             ->rawColumns(['action']);
@@ -56,7 +58,11 @@ class UsersDataTable extends DataTable
         return $this->builder()
             ->setTableId('users-table')
             ->columns($this->getColumns())
-            ->minifiedAjax();
+            ->minifiedAjax()
+            ->parameters([
+                'responsive' => true,
+                'autoWidth' => false
+            ]);
     }
 
     /**
@@ -66,7 +72,7 @@ class UsersDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('name'),
+            Column::make('name')->title('Nama'),
             Column::make('email'),
             Column::computed('action')
                 ->title('Action')

@@ -22,15 +22,25 @@ class PeminjamanDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        if (Auth::guard('user')->check()) {
-            return (new EloquentDataTable($query))
-                ->setRowId('id');
-        }
-        return (new EloquentDataTable($query))
+        $table = (new EloquentDataTable($query))
             ->setRowId('id')
-            ->addColumn('action', function ($pengajuan) {
-                if ($pengajuan['status'] === 'approved') {
-                    return '
+            ->editColumn('status', function ($pengajuan) {
+                $theme = "warning";
+                if ($pengajuan['status'] === "approved") {
+                    $theme = "success";
+                } else if ($pengajuan['status'] === "rejected") {
+                    $theme = "danger";
+                } else if ($pengajuan['status'] === "returned") {
+                    $theme = "primary";
+                }
+                return '<label class="badge bg-' . $theme . '">' . $pengajuan['status'] . '</label>';
+            });
+        if (Auth::guard('user')->check()) {
+            return $table->rawColumns(['status']);
+        }
+        $table = $table->addColumn('action', function ($pengajuan) {
+            if ($pengajuan['status'] === 'approved') {
+                return '
                     <form action="' . route("pengajuan.status", ['id' => $pengajuan['id'], 'status' => 'returned']) . '" method="POST" onsubmit="return confirm(`Ubah status?`);">
                         ' . csrf_field() . '
                         ' . method_field('PUT') . '
@@ -38,13 +48,14 @@ class PeminjamanDataTable extends DataTable
                             Return
                         </button>
                     </form>';
-                }
-                return '    
+            }
+            return '    
                 <button class="btn btn-xs btn-primary" disabled>
                    Return
                 </button>';
-            })
-            ->rawColumns(['action']);
+        })->rawColumns(['action', 'status']);
+
+        return $table;
     }
 
     /**
@@ -52,16 +63,18 @@ class PeminjamanDataTable extends DataTable
      */
     public function query(Pengajuan $model): QueryBuilder
     {
-        return $model->newQuery()
-            ->where('status', '=', 'approved')
-            ->orWhere('status', '=', 'returned')
+        $query = $model->newQuery()
             ->join('users', 'users.id', '=', 'pengajuan.id_user')
             ->join('buku', 'buku.id', '=', 'pengajuan.id_buku')
             ->select(
                 'pengajuan.*',
                 'users.name as nama',
                 'buku.judul_buku'
-            );
+            )->where(function ($query) {
+                $query->where('status', '=', 'approved')
+                    ->orWhere('status', '=', 'returned');
+            });
+        return $query;
     }
 
     /**
@@ -72,7 +85,11 @@ class PeminjamanDataTable extends DataTable
         return $this->builder()
             ->setTableId('peminjaman-table')
             ->columns($this->getColumns())
-            ->minifiedAjax();
+            ->minifiedAjax()
+            ->parameters([
+                'responsive' => true,
+                'autoWidth' => false
+            ]);
     }
 
     /**
@@ -89,16 +106,18 @@ class PeminjamanDataTable extends DataTable
             Column::make('tanggal_peminjaman'),
             Column::make('tanggal_pengembalian'),
             Column::make('status'),
-            Column::computed('action')
-                ->title('Action')
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->searchable(false),
         ];
 
-        if (Auth::guard('user')->check()) {
-            unset($columns[8]);
+        if (Auth::guard('admin')->check()) {
+            array_push(
+                $columns,
+                Column::computed('action')
+                    ->title('Action')
+                    ->exportable(false)
+                    ->printable(false)
+                    ->orderable(false)
+                    ->searchable(false)
+            );
         }
 
         return $columns;

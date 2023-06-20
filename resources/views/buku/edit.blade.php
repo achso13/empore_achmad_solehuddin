@@ -1,46 +1,49 @@
 @extends('layouts.app')
 
+@section('content_header')
+    <h1>Edit Buku</h1>
+@stop
+
 @section('content')
-    <div class="container pt-3">
-        <div class="card">
-            <div class="card-header">
-                Edit Buku
-            </div>
-
-            <div class="card-body">
-                <form action={{ route('books.update', $buku['id']) }} method="post">
-                    @csrf
-                    @method('put')
-
-                    <div class="row">
-                        <x-adminlte-input name="judul_buku" label="Judul Buku" placeholder="judul buku" error-key="judul_buku"
-                            fgroup-class="col-md-6" value="{{ $buku['judul_buku'] }}" />
-
-                        <x-adminlte-input name="penulis" label="Penulis" placeholder="penulis buku" error-key="penulis"
-                            fgroup-class="col-md-6" value="{{ $buku['penulis'] }}" />
-                    </div>
-
-                    <div class="row">
-                        @php
-                            $config = ['format' => 'YYYY'];
-                        @endphp
-                        <x-adminlte-input-date name="tahun_terbit" :config="$config" placeholder="tahun terbit buku"
-                            label="Tahun Terbit" fgroup-class="col-md-6" value="{{ $buku['tahun_terbit'] }}">
-                            <x-slot name="appendSlot">
-                                <div class="input-group-text bg-dark">
-                                    <i class="fas fa-calendar-day"></i>
-                                </div>
-                            </x-slot>
-                        </x-adminlte-input-date>
-
-                        <x-adminlte-input name="stok" type="number" label="Stok" placeholder="stok buku"
-                            error-key="stok" fgroup-class="col-md-6" value="{{ $buku['stok'] }}" />
-                    </div>
-
-                    <x-adminlte-button label="Submit" type="submit" theme="primary" />
-                </form>
-            </div>
+    <div class="card mt-2">
+        <div class="card-header">
+            Form Edit Buku
         </div>
+
+        <form action={{ route('books.update', $buku['id']) }} method="post">
+            @csrf
+            @method('put')
+            <div class="card-body">
+
+                <div class="row">
+                    <x-adminlte-input name="judul_buku" label="Judul Buku" placeholder="judul buku" error-key="judul_buku"
+                        fgroup-class="col-md-6" value="{{ $buku['judul_buku'] }}" />
+
+                    <x-adminlte-input name="penulis" label="Penulis" placeholder="penulis buku" error-key="penulis"
+                        fgroup-class="col-md-6" value="{{ $buku['penulis'] }}" />
+                </div>
+
+                <div class="row">
+                    @php
+                        $config = ['format' => 'YYYY'];
+                    @endphp
+                    <x-adminlte-input-date name="tahun_terbit" :config="$config" placeholder="tahun terbit buku"
+                        label="Tahun Terbit" fgroup-class="col-md-6" value="{{ $buku['tahun_terbit'] }}">
+                        <x-slot name="appendSlot">
+                            <div class="input-group-text bg-dark">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                        </x-slot>
+                    </x-adminlte-input-date>
+
+                    <x-adminlte-input name="stok" type="number" label="Stok" placeholder="stok buku" error-key="stok"
+                        fgroup-class="col-md-6" value="{{ $buku['stok'] }}" />
+                </div>
+                <div class="card-footer">
+                    <x-adminlte-button label="Submit" type="submit" class="float-right" theme="primary" />
+                </div>
+        </form>
+    </div>
     </div>
 @endsection
 

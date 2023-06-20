@@ -22,41 +22,57 @@ class PengajuanDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
+        $table = (new EloquentDataTable($query))
+            ->setRowId('id')
+            ->editColumn('status', function ($pengajuan) {
+                $theme = "warning";
+                if ($pengajuan['status'] === "approved") {
+                    $theme = "success";
+                } else if ($pengajuan['status'] === "rejected") {
+                    $theme = "danger";
+                } else if ($pengajuan['status'] === "returned") {
+                    $theme = "primary";
+                }
+                return '<label class="badge bg-' . $theme . '">' . $pengajuan['status'] . '</label>';
+            });
         if (Auth::guard('user')->check()) {
-            return (new EloquentDataTable($query))
-                ->setRowId('id');
+            return $table->rawColumns(['status']);
         }
 
-        return (new EloquentDataTable($query))
-            ->setRowId('id')
-            ->addColumn('action', function ($pengajuan) {
-                if ($pengajuan['status'] === 'pending') {
-                    return '
-                    <form action="' . route("pengajuan.status", ['id' => $pengajuan['id'], 'status' => 'approved']) . '" method="POST" onsubmit="return confirm(`Approve pengajuan?`);" >
-                        ' . csrf_field() . '
-                        ' . method_field('PUT') . '
-                        <button type="submit" class="btn btn-xs btn-success">
-                            Approve
-                        </button>
-                    </form>
-                    <form action="' . route("pengajuan.status", ['id' => $pengajuan['id'], 'status' => 'rejected']) . '" method="POST" onsubmit="return confirm(`Reject pengajuan?`);">
-                        ' . csrf_field() . '
-                        ' . method_field('PUT') . '
-                        <button type="submit" class="btn btn-xs btn-danger">
-                            Reject
-                        </button>
-                    </form>
-                    ';
-                }
-                return '    
-                    <button class="btn btn-xs btn-success" disabled>
-                       Approve
-                    </button>   
-                    <button class="btn btn-xs btn-danger" disabled>
+        $table = $table->addColumn('action', function ($pengajuan) {
+            if ($pengajuan['status'] === 'pending') {
+                return '
+                <div class="d-flex">  
+                <form class="mr-2" action="' . route("pengajuan.status", ['id' => $pengajuan['id'], 'status' => 'approved']) . '" method="POST" onsubmit="return confirm(`Approve pengajuan?`);">
+                    ' . csrf_field() . '
+                ' . method_field('PUT') . '
+                    <button type="submit" class="btn btn-xs btn-success">
+                        Approve
+                    </button>
+                </form>
+                <form action="' . route("pengajuan.status", ['id' => $pengajuan['id'], 'status' => 'rejected']) . '" method="POST" onsubmit="return confirm(`Reject pengajuan?`);">
+                ' . csrf_field() . '
+                ' . method_field('PUT') . '
+                    <button type="submit" class="btn btn-xs btn-danger">
                         Reject
-                    </button>';
-            })
-            ->rawColumns(['action']);
+                    </button>
+                </form>
+                </div>  
+     
+                ';
+            }
+            return '
+            <div class="d-flex">   
+                <button class="btn btn-xs btn-success mr-2" disabled>
+                   Approve
+                </button>   
+                <button class="btn btn-xs btn-danger" disabled>
+                    Reject
+                </button>
+            </div>';
+        })->rawColumns(['action', 'status']);
+
+        return $table;
     }
 
     /**
@@ -82,7 +98,11 @@ class PengajuanDataTable extends DataTable
         return $this->builder()
             ->setTableId('pengajuan-table')
             ->columns($this->getColumns())
-            ->minifiedAjax();
+            ->minifiedAjax()
+            ->parameters([
+                'responsive' => true,
+                'autoWidth' => false
+            ]);
     }
 
     /**
@@ -99,17 +119,18 @@ class PengajuanDataTable extends DataTable
             Column::make('tanggal_peminjaman'),
             Column::make('tanggal_pengembalian'),
             Column::make('status'),
-            Column::computed('action')
-                ->title('Action')
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->searchable(false),
-
         ];
 
-        if (Auth::guard('user')->check()) {
-            unset($columns[8]);
+        if (Auth::guard('admin')->check()) {
+            array_push(
+                $columns,
+                Column::computed('action')
+                    ->title('Action')
+                    ->exportable(false)
+                    ->printable(false)
+                    ->orderable(false)
+                    ->searchable(false)
+            );
         }
 
         return $columns;
