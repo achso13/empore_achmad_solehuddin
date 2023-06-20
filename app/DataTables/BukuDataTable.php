@@ -26,6 +26,11 @@ class BukuDataTable extends DataTable
             ->setRowId('id')
             ->addColumn('action', function ($buku) {
                 if (Auth::guard('user')->check()) {
+                    if ($buku['stok'] < 1) {
+                        return '<button class="btn btn-xs btn-primary" disabled>
+                            Tidak Tersedia
+                        </button>';
+                    }
                     return '<a href="' . route("pengajuan.create", $buku['id']) . '" class="btn btn-xs btn-primary">
                     Pinjam
                 </a>';
